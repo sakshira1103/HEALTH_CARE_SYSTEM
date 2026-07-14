@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:healthcare_dev;DB_CLOSE_DELAY=-1
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: ""
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+  cache:
+    type: simple   # in-memory cache — no Redis server required to run the project
+
+app:
+  cache:
+    redis-enabled: false   # set true + run a real Redis server to test the production caching path
+
+logging:
+  level:
+    com.healthcare: DEBUG

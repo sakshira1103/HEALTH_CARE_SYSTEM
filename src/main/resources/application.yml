@@ -1,0 +1,61 @@
+spring:
+  application:
+    name: secure-healthcare-system
+
+  profiles:
+    active: dev
+
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/healthcare_db}
+    username: postgres
+    password: SM280505
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+
+server:
+  port: 8080
+  error:
+    include-message: never
+    include-stacktrace: never
+
+# --- Application-specific security settings ---
+app:
+  jwt:
+    secret: ${JWT_SECRET:CHANGE_THIS_TO_A_LONG_RANDOM_SECRET_IN_PRODUCTION_AT_LEAST_64_BYTES}
+    expiration-ms: ${JWT_EXPIRATION_MS:3600000} # 1 hour
+  encryption:
+    key: ${ENCRYPTION_KEY:dGhpc2lzYTMyYnl0ZWtleWZvcmRlbW9wdXJwb3Nlcw==} # base64, 32 bytes -> REPLACE in production
+
+# --- Monitoring / Actuator ---
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus,metrics
+  endpoint:
+    health:
+      show-details: when-authorized
+  metrics:
+    tags:
+      application: secure-healthcare-system
+
+logging:
+  level:
+    com.healthcare: INFO
+    org.springframework.security: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
